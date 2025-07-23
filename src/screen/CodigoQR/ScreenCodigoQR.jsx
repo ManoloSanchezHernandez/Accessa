@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,9 +7,26 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Colors } from '../../themes/colors';
 
-export default function GenerateQRScreen() {
+export default function ScreenCodigoQR() {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const formatDate = (date) => {
+    if (!date) return 'Selecciona fecha';
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+  };
+
+  const showDatePicker = () => setDatePickerVisibility(true);
+  const hideDatePicker = () => setDatePickerVisibility(false);
+
+  const handleConfirm = (date) => {
+    setSelectedDate(date);
+    hideDatePicker();
+  };
+
   return (
     <ScrollView
       style={{ backgroundColor: Colors.background }}
@@ -48,9 +65,24 @@ export default function GenerateQRScreen() {
           {/* Fecha */}
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Fecha</Text>
-            <TouchableOpacity style={styles.input} activeOpacity={0.7}>
-              <Text style={styles.placeholderText}>Hora estimada de llegada</Text>
+            <TouchableOpacity
+              style={styles.input}
+              activeOpacity={0.7}
+              onPress={showDatePicker}
+            >
+              <Text style={selectedDate ? styles.placeholderText : styles.placeholderText}>
+                {formatDate(selectedDate)}
+              </Text>
             </TouchableOpacity>
+
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="datetime"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+              minimumDate={new Date()}
+              is24Hour={true}
+            />
           </View>
 
           {/* Motivo */}
@@ -64,8 +96,6 @@ export default function GenerateQRScreen() {
             />
           </View>
         </View>
-
-        <View style={styles.divider} />
 
         <TouchableOpacity style={styles.submitButton} activeOpacity={0.85}>
           <Text style={styles.submitButtonText}>Solicitar código QR</Text>
@@ -128,12 +158,7 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontSize: 15,
-    color: Colors.gray,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: Colors.border,
-    marginVertical: 20,
+    color: Colors.textPrimary,
   },
   submitButton: {
     borderRadius: 8,

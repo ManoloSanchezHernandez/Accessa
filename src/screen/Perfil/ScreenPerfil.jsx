@@ -9,7 +9,14 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Colors } from '../../themes/colors';
 
-export default function ProfileScreen() {
+
+
+export default function ProfileScreen({navigation}) {
+
+  const goToDatos = () => navigation.navigate('Datos');
+  const goToNoti = () => navigation.navigate('Notificaciones');
+  const goToConf = () => navigation.navigate('Configuraciones');
+
   return (
     <ScrollView
       style={{ backgroundColor: Colors.background }}
@@ -29,15 +36,16 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.menuCard}>
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.menuItem} activeOpacity={0.7} onPress={goToDatos}>
           <View style={styles.menuItemContent}>
             <Icon name="person-outline" size={24} color={Colors.primary} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Datos personales</Text>
+            
           </View>
           <Icon name="chevron-right" size={24} color={Colors.gray} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.menuItem} activeOpacity={0.7} onPress={goToNoti}>
           <View style={styles.menuItemContent}>
             <Icon name="notifications-none" size={24} color={Colors.primary} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Notificaciones</Text>
@@ -45,7 +53,7 @@ export default function ProfileScreen() {
           <Icon name="chevron-right" size={24} color={Colors.gray} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.menuItem} activeOpacity={0.7} onPress={goToConf}>
           <View style={styles.menuItemContent}>
             <Icon name="settings" size={24} color={Colors.primary} style={styles.menuIcon} />
             <Text style={styles.menuItemText}>Configuraciones</Text>

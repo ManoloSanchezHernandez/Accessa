@@ -11,12 +11,16 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 //importciones de las pantallas usadas para la app
 import ScreenHome from './src/screen/Home/ScreenHome';
 import ScreenLogin from './src/screen/Login/ScreenLogin';
-import ScreenAjuste from './src/screen/Ajustes/ScreenAjuste';
 import ScreenCodigoQR from './src/screen/CodigoQR/ScreenCodigoQR';
 import ScreenPerfil from './src/screen/Perfil/ScreenPerfil';
 import ScreenPanico from './src/screen/Panico/ScreenPanico';
 import ScreenReportes from './src/screen/Reportes/ScreenReportes';
 import ScreenRegistro from './src/screen/Login/ScreenRegistro';
+import ConfiguracionesScreen from './src/screen/Perfil/ConfiguracionesScreen';
+import DatosScreen from './src/screen/Perfil/DatosScreen';
+import NotificacionesScreen from './src/screen/Perfil/NotificacionesScreen';
+
+//importamos los estilos
 import { Colors } from './src/themes/colors';
 
 //declarar las funciones de navegación
@@ -29,40 +33,39 @@ function MyTabs() {
         <Tabs.Navigator
             screenOptions={{
                 tabBarActiveTintColor: Colors.textPrimary,
-                tabBarInactiveTintColor: 'rgb(242, 242, 242)', // Gris con opacidad (hex + alpha)
-                tabBarActiveBackgroundColor: 'rgb(242, 242, 242)',
+                tabBarInactiveTintColor: Colors.background,
+                tabBarActiveBackgroundColor: Colors.background,
+                headerBackTitle: 'Custom Back',
+                headerBackTitleStyle: { fontSize: 30 },
 
                 // Configuración del Header
                 headerShown: true,
-                headerTitle: 'Inicio', // Usa headerTitle en lugar de title para claridad
-                headerTintColor: 'rgb(242, 242, 242 )', // Blanco (hex simplificado, sin espacios)
+                headerTintColor: Colors.background, // Blanco (hex simplificado, sin espacios)
                 headerTitleStyle: {
-                    color: 'white', // Redundante (headerTintColor ya lo cubre), pero puede dejarse
-                    fontWeight: 'bold', // Mejora la legibilidad
+                    color: Colors.background, // Redundante (headerTintColor ya lo cubre), pero puede dejarse
+                    fontWeight: 'bold', // Mejora la legibilidad,
+                    justifyContent: 'center'
                 },
                 headerStyle: {
                     backgroundColor: Colors.textPrimary,
-                    elevation: 0, // Elimina sombra en Android
-                    shadowOpacity: 0, // Elimina sombra en iOS
+
                 },
 
                 // Configuración de la TabBar
-                tabBarLabelPosition: 'beside-icon',
+                tabBarLabelPosition: 'below-icon',
                 tabBarStyle: {
                     backgroundColor: Colors.textPrimary, // Fondo coherente con el header
                     borderTopWidth: 0, // Elimina línea superior
                     position: 'absolute',
 
-                    
-                }
-                
+                },
             }}
         >
-            <Tabs.Screen name="Inicio" component={ScreenHome}
+            <Tabs.Screen name="Inicio" component={MyStackHome}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Entypo name="home" size={size} color={color} />
-                    )
+                    ),
                 }} />
             <Tabs.Screen name="Panico" component={ScreenPanico}
                 options={{
@@ -82,7 +85,7 @@ function MyTabs() {
                         <FontAwesome name="qrcode" size={size} color={color} />
                     )
                 }} />
-            <Tabs.Screen name="Perfil" component={ScreenPerfil}
+            <Tabs.Screen name="Perfil" component={MyStackUser}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Feather name="user" size={size} color={color} />
@@ -92,20 +95,38 @@ function MyTabs() {
         </Tabs.Navigator>
     )
 }
-
 // Aquí se definen las pestañas de navegación
-function MyStack() {
+function MyStackHome() {
     return (
-        <Stack.Navigator>
-            <Stack.Screen name="Home" component={ScreenHome} />
-            <Stack.Screen name="Login" component={ScreenLogin} />
-            <Stack.Screen name="Register" component={ScreenRegistro} />
-            <Stack.Screen name="Ajustes" component={ScreenAjuste} />
-            <Stack.Screen name="QR" component={ScreenCodigoQR} />
-            <Stack.Screen name="Perfil" component={ScreenPerfil} />
-            <Stack.Screen name="Reportes" component={ScreenReportes} />
+        <Stack.Navigator >
+            <Stack.Screen name="Home" component={ScreenHome} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={ScreenLogin} options={{
+            }} />
+            <Stack.Screen name="Register" component={ScreenRegistro} options={{
+            }} />
+            <Stack.Screen name="QR" component={ScreenCodigoQR} options={{
+            }} />
+            <Stack.Screen name="Perfil" component={ScreenPerfil} options={{
+            }} />
+            <Stack.Screen name="Reportes" component={ScreenReportes} options={{
+            }} />
+            <Stack.Screen name="Panico" component={ScreenPanico} options={{}} />
         </Stack.Navigator>
     );
+}
+
+function MyStackUser() {
+    return(
+        <Stack.Navigator >
+        <Stack.Screen name="Perfil" component={ScreenPerfil} options={{ headerShown: false }} />
+        <Stack.Screen name="Datos" component={DatosScreen} options={{
+        }} />
+        <Stack.Screen name="Notificaciones" component={NotificacionesScreen} options={{
+        }} />
+        <Stack.Screen name="Configuraciones" component={ConfiguracionesScreen} options={{
+        }} />
+    </Stack.Navigator>
+    )
 }
 
 export default function Navegation() {

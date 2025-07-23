@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,8 +8,13 @@ import {
   ScrollView,
 } from 'react-native';
 import { Colors } from '../../themes/colors';
+import Picker from '../../components/Picker';
+import ImageSelector from '../../components/ImageSelector';
 
-export default function SecurityReportsScreen() {
+export default function ScreenReportes() {
+  const [tipoProblema, setTipoProblema] = useState(null);
+  const [ubicacion, setUbicacion] = useState(null);
+
   return (
     <ScrollView
       style={{ backgroundColor: Colors.background }}
@@ -17,13 +22,10 @@ export default function SecurityReportsScreen() {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Reportes</Text>
-
-        <Text style={styles.sectionTitle}>Describa el problema a reportar</Text>
+        <Text style={styles.sectionTitle}>Describa el problema a reportar</Text>  
 
         <View style={styles.card}>
           <Text style={styles.label}>Descripción del problema:</Text>
-
           <TextInput
             style={styles.input}
             placeholder="Describe detalladamente el problema"
@@ -32,29 +34,27 @@ export default function SecurityReportsScreen() {
             numberOfLines={4}
           />
 
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Tipo de problema:</Text>
-            <TouchableOpacity style={styles.selector} activeOpacity={0.7}>
-              <Text style={styles.selectorText}>Selecciona el tipo de problema</Text>
-            </TouchableOpacity>
-          </View>
+          <Picker
+            label="Tipo de problema"
+            options={['Robo', 'Vandalismo', 'Accidente', 'Otro']}
+            selectedValue={tipoProblema}
+            onSelect={setTipoProblema}
+          />
 
-          <View style={styles.fieldGroup}>
-            <Text style={styles.label}>Ubicación del incidente:</Text>
-            <TouchableOpacity style={styles.selector} activeOpacity={0.7}>
-              <Text style={styles.selectorText}>Selecciona una ubicación</Text>
-            </TouchableOpacity>
-          </View>
+          <Picker
+            label="Ubicación del incidente"
+            options={['Calle 1', 'Calle 2', 'Edificio A', 'Otro']}
+            selectedValue={ubicacion}
+            onSelect={setUbicacion}
+          />
 
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Adjuntar evidencia:</Text>
             <TouchableOpacity style={styles.attachmentButton} activeOpacity={0.7}>
-              <Text style={styles.attachmentText}>📎 Adjuntar Foto</Text>
+              <ImageSelector/>
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.divider} />
 
         <TouchableOpacity style={styles.submitButton} activeOpacity={0.85}>
           <Text style={styles.submitButtonText}>Enviar Reporte</Text>
@@ -63,10 +63,10 @@ export default function SecurityReportsScreen() {
     </ScrollView>
   );
 }
-
 const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 40,
+    marginBottom:40
   },
   container: {
     flex: 1,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     marginBottom: 24,
-    color: Colors.textSecondary,
+    color: Colors.textPrimary,
   },
   card: {
     backgroundColor: Colors.card,
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 4,
+    marginBottom:100
   },
   submitButtonText: {
     color: Colors.textOnPrimary,
