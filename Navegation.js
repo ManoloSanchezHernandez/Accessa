@@ -37,6 +37,8 @@ function MyTabs() {
                 tabBarActiveBackgroundColor: Colors.background,
                 headerBackTitle: 'Custom Back',
                 headerBackTitleStyle: { fontSize: 30 },
+                headerTitleAlign: 'center',
+
 
                 // Configuración del Header
                 headerShown: true,

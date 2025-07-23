@@ -34,7 +34,6 @@ export default function ScreenCodigoQR() {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Generar código QR</Text>
 
         <Text style={styles.subtitle}>
           Rellena el formulario de acuerdo a la información de su invitado
