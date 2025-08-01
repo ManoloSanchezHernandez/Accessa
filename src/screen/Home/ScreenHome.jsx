@@ -1,224 +1,126 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { Text, Button, Card, Title, Avatar } from 'react-native-paper';
-import { Colors } from '../../themes/colors.js';
-import {ActionCard} from '../../components/ActionCard.js';
-import { InfoCard } from '../../components/InfoCard.js';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, Avatar, Card } from 'react-native-paper';
+import { Colors } from '../../themes/colors';
+import { ActionCard } from '../../components/ActionCard';
+import { InfoCard } from '../../components/InfoCard';
 
 export default function ScreenHome({ navigation }) {
   const usuario = 'Juan Manuel';
 
-  const goToPanico = () => navigation.navigate('Panico');
-  const goToReportes = () => navigation.navigate('Reportes');
-  const goToQR = () => navigation.navigate('QR');
+
+  const actions = [
+    { icon: 'file-document', title: 'Reportes', subtitle: 'Ver y crear reportes', onPress: () => navigation.navigate('Reportes') },
+    { icon: 'qrcode', title: 'Código QR', subtitle: 'Generar invitaciones', onPress: () => navigation.navigate('QR') },
+  ];
+
+  const stats = [
+    { icon: 'file-document', title: 'Reportes', metric: 3, subtitle: 'Realizados' },
+    // { icon: 'alert-octagon', title: 'CodigosQR', metric: 42, subtitle: 'Autorizados' },
+    // { icon: 'qrcode', title: 'Panico', metric: 42, subtitle: 'Resueltas' },
+  ];
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Header de bienvenida */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>¡Bienvenido, {usuario}!</Text>
-          <Text style={styles.subtitle}>Opciones disponibles</Text>
-        </View>
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      <Header usuario={usuario} />
+      <EmergencyCard onPress={() => navigation.navigate('Panico')} />
 
-        {/* Botón de emergencia */}
-        <TouchableOpacity style={styles.emergencyCard} onPress={goToPanico}>
-          <Card.Content style={styles.emergencyCardContent}>
-            <Avatar.Icon icon="alert" size={48} style={styles.emergencyIcon} />
-            <View style={styles.emergencyTextContainer}>
-              <Text style={styles.emergencyTitle}>Botón de Emergencia</Text>
-            </View>
-          </Card.Content>
-        </TouchableOpacity>
+      <View style={styles.actionsGrid}>
+        {actions.map((action, i) => (
+          <ActionCard key={i} {...action} />
+        ))}
+      </View>
 
-        {/* Acciones principales */}
-        <View style={styles.actionsGrid}>
-          <ActionCard
-            icon="file-document"
-            title="Reportes"
-            subtitle="Ver y crear reportes"
-            onPress={goToReportes}
-          />
-          <ActionCard
-            icon="qrcode"
-            title="Código QR"
-            subtitle="Generar invitaciones"
-            onPress={goToQR}
-            style={{color: Colors.textPrimary}}
-          />
-        </View>
-
-        {/* Estadísticas */}
-        <Text style={styles.sectionTitle}>Estadísticas</Text>
-        <View style={styles.cardContainer}>
+      <Text style={styles.sectionTitle}>Estadísticas</Text>
+      <View style={styles.statsContainer}>
+        {stats.map((stat, i) => (
           <InfoCard
-            icon="chart-bar"
-            title="Reportes"
-            metric="42"
-            subtitle="Este mes"
+            key={i}
+            {...stat}
             buttonLabel="Ver detalles"
-            onPress={goToReportes}
+            onPress={() => navigation.navigate('Historial')}
           />
+        ))}
+      </View>
 
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      
+    </ScrollView>
   );
 }
 
+const Header = ({ usuario }) => (
+  <View style={styles.header}>
+    <Text style={styles.headerTitle}>¡Bienvenido, {usuario}!</Text>
+    <Text style={styles.subtitle}>Opciones disponibles</Text>
+  </View>
+);
+
+const EmergencyCard = ({ onPress }) => (
+  <TouchableOpacity style={styles.emergencyCard} onPress={onPress}>
+    <Card.Content style={styles.emergencyCardContent}>
+      <Avatar.Icon icon="alert" size={60} style={styles.emergencyIcon} />
+      <View style={styles.emergencyTextContainer}>
+        <Text style={styles.emergencyTitle}>Botón de Emergencia</Text>
+      </View>
+    </Card.Content>
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  scrollContent: {
-    padding: 40,
+  container: {
+    padding: 24,
     paddingBottom: 40,
   },
   header: {
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 24,
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 26,
     fontWeight: 'bold',
     color: Colors.title,
-    alignSelf: 'center',
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: Colors.title,
-    marginTop:30,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: Colors.title,
     marginVertical: 16,
   },
-  // Emergencia
   emergencyCard: {
     borderRadius: 15,
     backgroundColor: Colors.danger,
-    marginBottom: 24,
-    alignItems: 'center',
+    marginBottom: 30,
+    elevation: 4,
+    textAlign: 'center',
   },
   emergencyCardContent: {
-    flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 20,
   },
   emergencyIcon: {
     backgroundColor: Colors.danger,
-    marginRight: 16,
-  },
-  emergencyTextContainer: {
-    flex: 1,
   },
   emergencyTitle: {
-    fontSize: 18,
+    fontSize:15,
     fontWeight: 'bold',
     color: Colors.textOnPrimary,
-    marginBottom: 4,
   },
-  emergencySubtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-  },
-  emergencyButton: {
-    backgroundColor: Colors.danger,
-    borderRadius: 8,
-    marginLeft: 16,
-    width: 100,
-  },
-  emergencyButtonLabel: {
-    color: Colors.textPrimary,
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  // Acciones
   actionsGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 24,
-    
-  },
-  actionCard: {
-    width: '48%',
-    borderRadius: 12,
-    backgroundColor: Colors.primary,
-    color: Colors.textOnPrimary, 
-    elevation: 2,
-  },
-  actionCardContent: {
-    alignItems: 'center',
-    padding: 16,
-  },
-  actionIcon: {
-    backgroundColor: Colors.primary,
-    color: Colors.textPrimary,
-    marginBottom: 12,
-    borderRadius:50
-  },
-  actionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: Colors.textOnPrimary,
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  actionSubtitle: {
-    fontSize: 1,
-    color: Colors.textPrimary,
-    textAlign: 'center',
-  },
-
-  
-  // Info
-  cardContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center', // ✅ Esto centra horizontalmente
     marginBottom: 20,
+    gap: 20
   },
-  infoCard: {
-    borderRadius: 12,
-    backgroundColor: Colors.card,
-    elevation: 2,
-  },
-  infoCardContent: {
-    padding: 16,
-  },
-  infoHeader: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  infoIcon: {
-    backgroundColor: Colors.primaryLight,
-  },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-  },
-  infoMetric: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: Colors.textPrimary,
-    marginBottom: 4,
-  },
-  infoSubtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    marginBottom: 12,
-  },
-  infoButton: {
-    borderColor: Colors.primary,
-    borderRadius: 8,
-  },
-  infoButtonLabel: {
-    color: Colors.primary,
-    fontSize: 14,
+  statsContainer: {
+    padding: 15,
+    marginBottom: 100,
+    gap: 20,
   },
 });

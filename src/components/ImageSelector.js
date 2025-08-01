@@ -1,38 +1,54 @@
 import React, { useState } from 'react';
-import { View, Button, Image, StyleSheet, Text, Alert } from 'react-native';
+import { View, Button, Image, Alert, StyleSheet, Animated } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 export default function ImageSelector() {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [image, setImage] = useState(null);
+  const [buttonTop, setButtonTop] = useState(new Animated.Value(0));
+  const [buttonScale, setButtonScale] = useState(new Animated.Value(1));
 
   const pickImage = async () => {
-    // Solicita permisos de galería
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permiso denegado', 'Se necesita acceso a la galería para seleccionar una imagen.');
-      return;
-    }
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permiso denegado', 'Se necesita acceso a la galería para seleccionar una imagen.');
+        return;
+      }
 
-    // Abre el selector de imágenes
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,       // permite recorte
-      aspect: [4, 3],            // relación de aspecto
-      quality: 1,                // calidad máxima
-    });
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
 
-    // Si el usuario no canceló, guarda la imagen
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+        // Animar movimiento hacia arriba y reducir el tamaño del botón
+        Animated.parallel([
+          Animated.timing(buttonTop, {
+            toValue: -80, // Mover hacia arriba
+            duration: 300,
+            useNativeDriver: false,
+          }),
+          Animated.timing(buttonScale, {
+            toValue: 0.8, // Escalar
+            duration: 300,
+            useNativeDriver: false,
+          }),
+        ]).start();
+      }
+    } catch (error) {
+      console.error('Error al abrir la galería:', error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Selecciona una imagen</Text>
-      <Button title="Elegir imagen" onPress={pickImage} color="#499FE9" />
-      {selectedImage && (
-        <Image source={{ uri: selectedImage }} style={styles.image} />
+      <Animated.View style={[styles.animatedButton, { top: buttonTop, transform: [{ scale: buttonScale }] }]}>
+        <Button title="Seleccionar imagen" onPress={pickImage} color="#0A84FF" />
+      </Animated.View>
+      {image && (
+        <Image source={{ uri: image }} style={styles.image} />
       )}
     </View>
   );
@@ -40,20 +56,14 @@ export default function ImageSelector() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    marginBottom:20,
+    marginTop: 100,
     alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
   },
-  title: {
-    fontSize: 16,
-    marginBottom: 12,
+  animatedButton: {
+    position: 'relative',
+    marginBottom: 20,
   },
-  image: {
-    width: 250,
-    height: 200,
-    marginTop: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
+
 });

@@ -7,6 +7,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Entypo from '@expo/vector-icons/Entypo';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { Ionicons } from '@expo/vector-icons';
 
 //importciones de las pantallas usadas para la app
 import ScreenHome from './src/screen/Home/ScreenHome';
@@ -19,6 +20,7 @@ import ScreenRegistro from './src/screen/Login/ScreenRegistro';
 import ConfiguracionesScreen from './src/screen/Perfil/ConfiguracionesScreen';
 import DatosScreen from './src/screen/Perfil/DatosScreen';
 import NotificacionesScreen from './src/screen/Perfil/NotificacionesScreen';
+import ScreenHistorial from './src/screen/Reportes/ScreenHistorial';
 
 //importamos los estilos
 import { Colors } from './src/themes/colors';
@@ -66,31 +68,31 @@ function MyTabs() {
             <Tabs.Screen name="Inicio" component={MyStackHome}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Entypo name="home" size={size} color={color} />
+                        <Ionicons name="home-sharp" size={size} color={color} />
                     ),
                 }} />
             <Tabs.Screen name="Panico" component={ScreenPanico}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Feather name="alert-octagon" size={size} color={color} />
+                        <MaterialCommunityIcons name="alert-octagon" size={size} color={color} />
                     )
                 }} />
             <Tabs.Screen name="Reportes" component={ScreenReportes}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <FontAwesome name="file" size={size} color={color} />
+                        <Ionicons name="document" size={size} color={color} />
                     )
                 }} />
             <Tabs.Screen name="QR" component={ScreenCodigoQR}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <FontAwesome name="qrcode" size={size} color={color} />
+                        <Ionicons name="qr-code" size={size} color={color} />
                     )
                 }} />
             <Tabs.Screen name="Perfil" component={MyStackUser}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Feather name="user" size={size} color={color} />
+                        <Ionicons name="person" size={size} color={color} />
                     )
                 }} />
 
@@ -113,29 +115,34 @@ function MyStackHome() {
             <Stack.Screen name="Reportes" component={ScreenReportes} options={{
             }} />
             <Stack.Screen name="Panico" component={ScreenPanico} options={{}} />
+            <Stack.Screen name="Historial" component={ScreenHistorial} options={{}} />
         </Stack.Navigator>
     );
 }
 
 function MyStackUser() {
-    return(
+    return (
         <Stack.Navigator >
-        <Stack.Screen name="Perfil" component={ScreenPerfil} options={{ headerShown: false }} />
-        <Stack.Screen name="Datos" component={DatosScreen} options={{
-        }} />
-        <Stack.Screen name="Notificaciones" component={NotificacionesScreen} options={{
-        }} />
-        <Stack.Screen name="Configuraciones" component={ConfiguracionesScreen} options={{
-        }} />
-    </Stack.Navigator>
+            <Stack.Screen name="Perfil" component={ScreenPerfil} options={{ headerShown: false }} />
+            <Stack.Screen name="Datos" component={DatosScreen} options={{
+            }} />
+            <Stack.Screen name="Notificaciones" component={NotificacionesScreen} options={{
+            }} />
+            <Stack.Screen name="Configuraciones" component={ConfiguracionesScreen} options={{
+            }} />
+        </Stack.Navigator>
     )
 }
 
 export default function Navegation() {
     return (
         <NavigationContainer>
-            <MyTabs />
+            <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Login" component={ScreenLogin} />
+                <Stack.Screen name="Register" component={ScreenRegistro} />
+                <Stack.Screen name="MyTabs" component={MyTabs} />
+            </Stack.Navigator>
         </NavigationContainer>
-    )
+    );
 }
 
